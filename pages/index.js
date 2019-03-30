@@ -1,59 +1,71 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Todo from './Todo';
 import Header from './Header';
 import AddTodo from './AddTodo';
 import uuid from 'uuid';
- export default class index extends Component {
+import axios from 'axios';
+
+export default class index extends Component {
     state = {
-    todos : [ ]
+        todos: []
     }
-// Toggle complete
+
+    componentDidMount() {
+        axios.get('http://localhost:3000/api').then(res => this.setState({ todos: res.data }));
+
+    }
+    // Toggle complete
     markComplete = (id) => {
-        this.setState({ todo : this.state.todos.map(todo => {
-            if(todo.id === id){
-                todo.completed = !todo.completed
-            }
-            return todo;
-        }) }); 
+        this.setState({
+            todo: this.state.todos.map(todo => {
+                if (todo.id === id) {
+                    todo.completed = !todo.completed
+                }
+                return todo;
+            })
+        });
     }
     //Delete Todo
     delTodo = (id) => {
-        this.setState({ todos : [...this.state.todos.filter(todo => todo.id
-        !== id)]})
+        this.setState({
+            todos: [...this.state.todos.filter(todo => todo.id
+                !== id)]
+        })
     }
     //Add Todo
     addTodo = (title) => {
-        const newTodo ={
-            id : uuid.v4(),
+        const newTodo = {
+            id: uuid.v4(),
             title,
-            completed : false
+            completed: false
         }
-        this.setState({ todos: [...this.state.todos,newTodo]});
+        this.setState({ todos: [...this.state.todos, newTodo] });
     }
-   
-    render(){
+
+    render() {
         return (
-            <div style = {all}>
-            <div className= "index">
-            <div className = "container">
-            <Header />
-            <div  style = {make}>
-            <AddTodo addTodo={this.addTodo}/>
+            <div style={all}>
+                <div className="index">
+                    <div className="container">
+                        <Header />
+                        <div style={make}>
+                            <AddTodo addTodo={this.addTodo} />
+                        </div>
+                        <Todo todos={this.state.todos} markComplete={this.markComplete}
+                            delTodo={this.delTodo} />
+                    </div>
+                </div>
             </div>
-         <Todo todos = {this.state.todos} markComplete = {this.markComplete}
-         delTodo = {this.delTodo} />
-         </div>
-        </div>
-        </div>
         );
     }
 }
+
 const make = {
-    paddingTop : '15px',
-    marginLeft : '500px',
-    marginRight : '500px'
+    paddingTop: '15px',
+    marginLeft: '500px',
+    marginRight: '500px'
 }
 
 const all = {
-    margin : 'auto'
+    margin: 'auto'
 }
