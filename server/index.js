@@ -30,4 +30,4 @@ app.prepare()
 .catch((ex) => {
   console.error(ex.stack)
   process.exit(1)
-})
+});
